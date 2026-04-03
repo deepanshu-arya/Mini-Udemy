@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from database import engine, SessionLocal
 import models, schemas
 from fastapi.middleware.cors import CORSMiddleware
+import os
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -43,3 +44,11 @@ def create_course(course: schemas.CourseCreate, db: Session = Depends(get_db)):
 @app.get("/courses")
 def get_courses(db: Session = Depends(get_db)):
     return db.query(models.Course).all()
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 10000))
+    )
